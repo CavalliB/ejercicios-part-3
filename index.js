@@ -26,17 +26,18 @@ let persons = [
     }
 ]
 
-app.post('/api/persons', (request, response) => {
-  const maxId = persons.length > 0
-    ? Math.max(...persons.map(n => n.id)) 
-    : 0
+app.get('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  const note = persons.find(note => note.id === id)
+  if (note) {
+    response.json(note)
+  } else {
+    response.status(404).end()
+  }
+})
 
-  const note = request.body
-  note.id = maxId + 1
-
-  persons = persons.concat(note)
-
-  response.json(note)
+app.get('/api/persons', (request, response) => {
+  response.json(persons)
 })
 
 const PORT = 3001
